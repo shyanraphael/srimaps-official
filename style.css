@@ -582,3 +582,255 @@ tr:hover {
 }
 
 /* <--- busSchedul.html Ends ---> */
+
+/* <--- lostFound.html Beginning ---> */
+
+/* Main Container */
+.lostfound-container {
+  max-width: 1000px;
+  margin: 120px auto 0 auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+/* Header */
+.lostfound-header {
+  max-width: 1200px;
+  margin: 50px auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  text-align: center;
+  background: #4a5de8;
+  color: white;
+  padding: 30px;
+}
+
+.lostfound-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.lostfound-back-link {
+  text-decoration: none;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.lostfound-back-link:hover {
+  color: #4a5de8;
+}
+
+/* Tabs */
+.lostfound-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 25px;
+}
+
+.lostfound-tab-btn {
+  flex: 1;
+  padding: 12px;
+  background: #f4f4f4;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: #666;
+  transition: 0.2s;
+}
+
+.lostfound-tab-btn:hover {
+  background: #e0e0e0;
+}
+
+.lostfound-tab-btn.active {
+  background: #333;
+  color: white;
+}
+
+/* Grid for Cards */
+.lostfound-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 25px;
+}
+
+/* Item Cards */
+.lostfound-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 30px;
+  transition: 0.2s;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.lostfound-card:hover {
+  border-color: #4a5de8;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.lostfound-card-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.lostfound-status {
+  font-size: 0.8rem;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: bold;
+  height: fit-content;
+}
+
+.lostfound-status.lost {
+  background: #ffebeb;
+  color: #c92a2a;
+}
+
+.lostfound-status.found {
+  background: #e6fcf5;
+  color: #0ca678;
+}
+
+.lostfound-item-name {
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.lostfound-item-info {
+  color: #666;
+  font-size: 0.95rem;
+  margin-bottom: 25px;
+  line-height: 1.6;
+}
+
+/* Button Styling */
+.lostfound-btn-group {
+  display: flex;
+  gap: 10px;
+  margin-top: auto;
+}
+
+.lostfound-btn {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-align: center;
+  transition: 0.2s;
+}
+
+.lostfound-btn-primary {
+  background: #4a5de8;
+  color: white;
+}
+
+.lostfound-btn-primary:hover {
+  background: #3a4dc8;
+}
+
+/* New Secondary Button Style */
+.lostfound-btn-secondary {
+  background: white;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+.lostfound-btn-secondary:hover {
+  background: #f8f8f8;
+  border-color: #bbb;
+}
+
+/* Form Styling */
+.lostfound-form-group {
+  margin-bottom: 15px;
+}
+
+.lostfound-label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.lostfound-input,
+.lostfound-select,
+.lostfound-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.lostfound-input:focus,
+.lostfound-textarea:focus {
+  outline: 2px solid #4a5de8;
+  border-color: transparent;
+}
+
+/* Utility */
+.hidden {
+  display: none;
+}
+
+/* Modal Styles */
+.lostfound-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.lostfound-modal-content {
+  background-color: #fff;
+  margin: 15% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  max-width: 500px;
+  border-radius: 8px;
+  position: relative;
+}
+
+.lostfound-modal-close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.lostfound-modal-close:hover,
+.lostfound-modal-close:focus {
+  color: black;
+  text-decoration: none;
+}
+
+.lostfound-modal-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+/* <--- busSchedul.html Ends ---> */

@@ -1,0 +1,34 @@
+[
+    {
+        "type": "lost",
+        "emoji": "🎒",
+        "name": "Black Backpack",
+        "date": "Jan 28",
+        "location": "Route 45",
+        "description": "Nike bag, contains laptop."
+    },
+    {
+        "type": "lost",
+        "emoji": "📱",
+        "name": "Silver iPhone",
+        "date": "Jan 29",
+        "location": "Route 8",
+        "description": "Cracked screen, clear case."
+    },
+    {
+        "type": "found",
+        "emoji": "☂️",
+        "name": "Red Umbrella",
+        "date": "Jan 31",
+        "location": "Route 15",
+        "description": "Wooden handle, found under seat."
+    },
+    {
+        "type": "found",
+        "emoji": "👛",
+        "name": "Brown Wallet",
+        "date": "Jan 30",
+        "location": "Airport Express",
+        "description": "Leather, contains ID."
+    }
+]

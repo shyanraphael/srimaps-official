@@ -16,6 +16,16 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => console.error(err));
 
+  // Loading lost and found items from our lost_found.JSON file
+  fetch('lost_found.json')
+    .then(response => response.json())
+    .then(items => {
+      populateLostFound(items);
+    })
+    .catch(error => {
+      console.error('Error loading JSON:', error);
+    });
+
   //lenis stuff
   const lenis = new Lenis({
     duration: 1.1,
@@ -167,3 +177,94 @@ async function init() {
 init();
 
 /* <--- busSchedule.html Ends ---> */
+
+/* <--- lostFound.html Beginning ---> */
+
+// Switching between tabs - pretty standard stuff
+function showTab(tab) {
+
+  document.querySelectorAll('.lostfound-tab-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  // Make the clicked one active
+  event.target.classList.add('active');
+
+  // Hide all sections first
+  document.querySelectorAll('.lostfound-content-section').forEach(section => {
+    section.classList.add('hidden');
+  });
+  // Then show the one we want
+  document.getElementById(tab).classList.remove('hidden');
+}
+
+// Building all the lost/found cards dynamically
+function populateLostFound(items) {
+  const lostGrid = document.querySelector('#lost .lostfound-grid');
+  const foundGrid = document.querySelector('#found .lostfound-grid');
+
+  // Start fresh each time
+  lostGrid.innerHTML = '';
+  foundGrid.innerHTML = '';
+
+  // Go through each item and make a card
+  items.forEach(item => {
+    const card = document.createElement('div');
+    card.className = 'lostfound-card';
+
+    // Fill it with the item's info using template strings
+    card.innerHTML = `
+            <div class="lostfound-card-top">
+                <span style="font-size: 1.8rem;">${item.emoji}</span>
+                <span class="lostfound-status ${item.type}">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span>
+            </div>
+            <div>
+                <div class="lostfound-item-name">${item.name}</div>
+                <div class="lostfound-item-info">
+                    📅 ${item.date} • ${item.location}<br>
+                    ${item.description}
+                </div>
+            </div>
+            <div class="lostfound-btn-group">
+                <button class="lostfound-btn lostfound-btn-secondary details-btn">Details</button>
+                <button class="lostfound-btn lostfound-btn-primary">${item.type === 'lost' ? 'I Found This' : 'Claim This'}</button>
+            </div>
+        `;
+
+    // Put it in the right grid
+    if (item.type === 'lost') {
+      lostGrid.appendChild(card);
+    } else {
+      foundGrid.appendChild(card);
+    }
+
+    // Make the details button actually work
+    const detailsBtn = card.querySelector('.details-btn');
+    detailsBtn.addEventListener('click', () => showDetails(item));
+  });
+}
+
+// Pop up the details modal when someone clicks
+function showDetails(item) {
+  const modal = document.getElementById('details-modal');
+  const modalBody = document.getElementById('modal-body');
+
+  // Fill the modal with this item's details
+  modalBody.innerHTML = `
+        <h2>${item.emoji} ${item.name}</h2>
+        <p><strong>Status:</strong> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>
+        <p><strong>Date:</strong> ${item.date}</p>
+        <p><strong>Location:</strong> ${item.location}</p>
+        <p><strong>Description:</strong> ${item.description}</p>
+    `;
+
+  // Show the modal
+  modal.style.display = 'block';
+}
+
+// Close the modal - simple as that
+function closeModal() {
+  const modal = document.getElementById('details-modal');
+  modal.style.display = 'none';
+}
+
+/* <--- lostFound.html Ends ---> */
