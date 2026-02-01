@@ -3,7 +3,8 @@
 }
 
 #smooth-wrapper {
-  height: 100vh;
+  height: 150vh;
+  /* make the height larger to accommodate scrolling (100vh to 150vh) in busSchedule.html*/
   overflow: hidden;
 }
 
@@ -336,35 +337,25 @@ button {
   border: none;
   border-radius: 12px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  font-family: 'Google Sans Flex', sans-serif;
   margin-bottom: 15px;
 }
 
 .start {
-  background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
+  background: #07903b;
   color: white;
-  box-shadow: 0 4px 15px rgba(56, 239, 125, 0.3);
 }
 
 .start:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(56, 239, 125, 0.4);
-}
-
-.start:active {
-  transform: translateY(0);
+  opacity: 0.9;
 }
 
 .stop {
-  background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+  background: #b71a2d;
   color: white;
-  box-shadow: 0 4px 15px rgba(235, 51, 73, 0.3);
 }
 
 .stop:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(235, 51, 73, 0.4);
+  opacity: 0.9;
 }
 
 .stop:active {
@@ -397,3 +388,197 @@ button {
 }
 
 /* <--- driver.html End -----> */
+
+/* <--- busSchedul.html Beginning ---> */
+
+.container {
+  max-width: 1200px;
+  margin: 150px auto;
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
+
+.container-header {
+  background: #4a5de8;
+  color: white;
+  padding: 30px;
+  text-align: center;
+}
+
+.container-h1 {
+  font-size: 2.5em;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 1.1em;
+  opacity: 0.9;
+}
+
+.controls {
+  padding: 20px 30px;
+  background: #f8f9ff;
+  border-bottom: 2px solid #4a5de8;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.route-Search {
+  color: black;
+  font-weight: 500;
+}
+
+.route-filter {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.input-route[type="text"] {
+  padding: 10px 15px;
+  border: 2px solid #4a5de8;
+  border-radius: 8px;
+  font-size: 1em;
+  background: white;
+  color: black;
+  transition: all 0.3s;
+  width: 250px;
+}
+
+.input-route[type="text"]:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1em;
+  background: #4a5de8;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s;
+}
+
+button:hover {
+  background: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.clearBtn {
+  background: #6b7280;
+}
+
+.clearBtn:hover {
+  background: #4b5563;
+}
+
+.schedule-grid {
+  padding: 30px;
+}
+
+.route-section {
+  margin-bottom: 30px;
+  border: 2px solid #e0e7ff;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.route-header {
+  background: #4a5de8;
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.route-number {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.route-name {
+  font-size: 1.1em;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+thead {
+  background: #f8f9ff;
+}
+
+th {
+  padding: 15px;
+  text-align: left;
+  color: black;
+  font-weight: 600;
+  border-bottom: 2px solid #4a5de8;
+}
+
+td {
+  padding: 12px 15px;
+  color: black;
+  border-bottom: 1px solid #e0e7ff;
+}
+
+tr:hover {
+  background: #f8f9ff;
+}
+
+.time {
+  font-weight: 600;
+  color: #4a5de8;
+}
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: #6b7280;
+  font-size: 1.2em;
+}
+
+@media (max-width: 768px) {
+  .container-h1 {
+    font-size: 1.8em;
+  }
+
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .current-time {
+    margin-left: 0;
+    text-align: center;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+
+  th,
+  td {
+    padding: 10px;
+  }
+}
+
+/* <--- busSchedul.html Ends ---> */

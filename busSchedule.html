@@ -2,9 +2,9 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SriMaps | Bus Schedule</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SriMaps | Driver Schedule</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
         rel="stylesheet">
@@ -15,18 +15,41 @@
         <div id="smooth-content">
             <div id="navbar-placeholder"></div>
 
+
             <div class="animated-bg">
                 <span class="blob blob-1"></span>
                 <span class="blob blob-2"></span>
                 <span class="blob blob-3"></span>
                 <span class="blob blob-4"></span>
             </div>
+
+            <div class="container">
+                <header class="container-header">
+                    <h1 class="container-h1">City Bus Schedule</h1>
+                    <p class="subtitle">Real-time schedule information</p>
+                </header>
+
+                <div class="controls">
+                    <div class="route-filter">
+                        <label for="routeSearch" class="route-Search">Search Route:</label>
+                        <input class="input-route" type="text" id="routeSearch"
+                            placeholder="Enter route number (e.g., 138)">
+                        <button id="searchBtn" class="searchBtn">Search</button>
+                        <button id="clearBtn" class="clearBtn">Clear</button>
+                    </div>
+
+                </div>
+                <div class="schedule-grid" id="scheduleGrid"></div>
+                <!-- Schedule will be populated by JavaScript -->
+            </div>
+
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.16/dist/lenis.min.js"></script>
     <script src="script.js"></script>
-
 </body>
+
 
 </html>
