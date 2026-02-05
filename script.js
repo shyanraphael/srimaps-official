@@ -1,6 +1,6 @@
+// DOM Content Loaded Event Listener
 document.addEventListener("DOMContentLoaded", () => {
-
-  //javbar
+  // Navbar
   fetch('navbar.html')
     .then(res => res.text())
     .then(data => {
@@ -16,17 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
     .catch(err => console.error(err));
 
-  // Loading lost and found items from our lost_found.JSON file
-  fetch('lost_found.json')
-    .then(response => response.json())
-    .then(items => {
-      populateLostFound(items);
-    })
-    .catch(error => {
-      console.error('Error loading JSON:', error);
-    });
-
-  //lenis stuff
+  // Lenis stuff
   const lenis = new Lenis({
     duration: 1.1,
     smooth: true,
@@ -42,10 +32,28 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   requestAnimationFrame(raf);
+
+  // Loading lost and found items from our lost_found.JSON file
+  fetch('lost_found.json')
+    .then(response => response.json())
+    .then(items => {
+      populateLostFound(items);
+    })
+    .catch(error => {
+      console.error('Error loading JSON:', error);
+    });
+
+  // Loading the alerts data from JSON file
+  if (document.getElementById('alertsContainer')) {
+    console.log('Alerts container found, loading alerts...');
+    // Small delay to ensure navbar and other async content is loaded
+    setTimeout(() => {
+      loadAlertsData();
+    }, 100);
+  }
 });
 
-
-//driver HTML
+// Driver HTML
 // DRIVER STARTS SHARING LOCATION
 document.getElementById("start")?.addEventListener("click", () => {
   navigator.geolocation.watchPosition(pos => {
@@ -67,11 +75,8 @@ if (stored) {
   console.log("Bus is at:", busLocation.lat, busLocation.lng);
 }
 
-/* <--- busSchedule.html Beginning ---> */
+// <--- busSchedule.html Beginning ---> //
 
-
-// Bus schedule data - will be loaded from JSON file
-let scheduleData = [];
 // Load schedule data from JSON file
 async function loadScheduleData() {
   try {
@@ -108,29 +113,29 @@ function renderSchedule(searchQuery = null) {
     section.className = 'route-section';
 
     section.innerHTML = `
-                    <div class="route-header">
-                        <div>
-                            <span class="route-number">Route ${route.route}</span>
-                            <span class="route-name"> - ${route.name}</span>
-                        </div>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Stop</th>
-                                <th>Departure Time</th>                                              
-                            </tr>
-                        </thead>
-                        <tbody>
-                            ${route.stops.map(stop => `
-                                <tr>
-                                    <td>${stop.stop}</td>
-                                    <td class="time">${stop.time}</td>
-                                </tr>
-                            `).join('')}
-                        </tbody>
-                    </table>
-                `;
+      <div class="route-header">
+        <div>
+          <span class="route-number">Route ${route.route}</span>
+          <span class="route-name"> - ${route.name}</span>
+        </div>
+      </div>
+      <table>
+        <thead>
+          <tr>
+            <th>Stop</th>
+            <th>Departure Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${route.stops.map(stop => `
+            <tr>
+              <td>${stop.stop}</td>
+              <td class="route-time">${stop.time}</td>
+            </tr>
+          `).join('')}
+        </tbody>
+      </table>
+    `;
 
     grid.appendChild(section);
   });
@@ -176,13 +181,14 @@ async function init() {
 
 init();
 
-/* <--- busSchedule.html Ends ---> */
+// <--- busSchedule.html Ends ---> //
 
-/* <--- lostFound.html Beginning ---> */
+
+
+// <--- lostFound.html Beginning ---> //
 
 // Switching between tabs - pretty standard stuff
 function showTab(tab) {
-
   document.querySelectorAll('.lostfound-tab-btn').forEach(btn => {
     btn.classList.remove('active');
   });
@@ -213,22 +219,22 @@ function populateLostFound(items) {
 
     // Fill it with the item's info using template strings
     card.innerHTML = `
-            <div class="lostfound-card-top">
-                <span style="font-size: 1.8rem;">${item.emoji}</span>
-                <span class="lostfound-status ${item.type}">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span>
-            </div>
-            <div>
-                <div class="lostfound-item-name">${item.name}</div>
-                <div class="lostfound-item-info">
-                    📅 ${item.date} • ${item.location}<br>
-                    ${item.description}
-                </div>
-            </div>
-            <div class="lostfound-btn-group">
-                <button class="lostfound-btn lostfound-btn-secondary details-btn">Details</button>
-                <button class="lostfound-btn lostfound-btn-primary">${item.type === 'lost' ? 'I Found This' : 'Claim This'}</button>
-            </div>
-        `;
+      <div class="lostfound-card-top">
+        <span style="font-size: 1.8rem;">${item.emoji}</span>
+        <span class="lostfound-status ${item.type}">${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</span>
+      </div>
+      <div>
+        <div class="lostfound-item-name">${item.name}</div>
+        <div class="lostfound-item-info">
+          📅 ${item.date} • ${item.location}<br>
+          ${item.description}
+        </div>
+      </div>
+      <div class="lostfound-btn-group">
+        <button class="lostfound-btn lostfound-btn-secondary details-btn">Details</button>
+        <button class="lostfound-btn lostfound-btn-primary">${item.type === 'lost' ? 'I Found This' : 'Claim This'}</button>
+      </div>
+    `;
 
     // Put it in the right grid
     if (item.type === 'lost') {
@@ -250,12 +256,12 @@ function showDetails(item) {
 
   // Fill the modal with this item's details
   modalBody.innerHTML = `
-        <h2>${item.emoji} ${item.name}</h2>
-        <p><strong>Status:</strong> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>
-        <p><strong>Date:</strong> ${item.date}</p>
-        <p><strong>Location:</strong> ${item.location}</p>
-        <p><strong>Description:</strong> ${item.description}</p>
-    `;
+    <h2>${item.emoji} ${item.name}</h2>
+    <p><strong>Status:</strong> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>
+    <p><strong>Date:</strong> ${item.date}</p>
+    <p><strong>Location:</strong> ${item.location}</p>
+    <p><strong>Description:</strong> ${item.description}</p>
+  `;
 
   // Show the modal
   modal.style.display = 'block';
@@ -267,4 +273,53 @@ function closeModal() {
   modal.style.display = 'none';
 }
 
-/* <--- lostFound.html Ends ---> */
+// <--- lostFound.html Ends ---> //
+
+// <--- realAlerts.html Beginning ---> //
+
+// Load alerts data
+async function loadAlertsData() {
+  console.log('Loading alerts data...');
+  try {
+    const response = await fetch('alerts.json');
+    console.log('Fetch response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const alertsData = await response.json();
+    console.log('Alerts data loaded successfully:', alertsData);
+    displayAlerts(alertsData);
+  } catch (error) {
+    console.error('Error loading alerts data:', error);
+    // Fallback: display error message
+    const container = document.getElementById('alertsContainer');
+    container.innerHTML = '<p>Unable to load alerts at this time. Please try again later.</p>';
+  }
+}
+
+// Display alerts
+function displayAlerts(alertsData) {
+  const container = document.getElementById('alertsContainer');
+  container.innerHTML = '';
+
+  if (alertsData.length === 0) {
+    container.innerHTML = '<p>No active alerts at this time.</p>';
+    return;
+  }
+
+  alertsData.forEach(alert => {
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'alert';
+    alertDiv.innerHTML = `
+      <div class="alert-header">
+        <h3>${alert.title}</h3>
+        <span class="alert-time">${new Date(alert.timestamp).toLocaleString()}</span>
+      </div>
+      <p>${alert.message}</p>
+    `;
+    container.appendChild(alertDiv);
+  });
+}
+
+// <--- realAlerts.html Ends ---> //
+
