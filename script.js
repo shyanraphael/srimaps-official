@@ -37,17 +37,22 @@ function initNavbar() {
   fetch('navbar.html')
     .then(res => res.text())
     .then(data => {
-      document.getElementById('navbar-placeholder').innerHTML = data;
-      initCart();
-      loadCheckoutSummary();
+      const navPlaceholder = document.getElementById('navbar-placeholder');
+      if (navPlaceholder) {
+        navPlaceholder.innerHTML = data;
 
-      const cartScroll = document.querySelector('.cart-scroll');
-      if (cartScroll) {
-        cartScroll.addEventListener('wheel', e => e.stopPropagation());
-        cartScroll.addEventListener('touchmove', e => e.stopPropagation());
+        if (typeof initCart === 'function') initCart();
+        if (typeof loadCheckoutSummary === 'function') loadCheckoutSummary();
+
+        const cartScroll = document.querySelector('.cart-scroll');
+        if (cartScroll) {
+          cartScroll.addEventListener('wheel', e => e.stopPropagation());
+          cartScroll.addEventListener('touchmove', e => e.stopPropagation());
+        }
       }
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error('Navbar Error:', err));
+
 }
 
 // Sets up the Lenis library for smooth, modern scrolling effects
