@@ -1,8 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
 
   //  Run features that appear on every single page
-  initNavbar(); // Loads the navigation menu
-  initLenis();  // Enables smooth scrolling
+  initNavbar();// Loads the navigation menu
+  initLenis();// Enables smooth scrolling
 
   // Checks if we are on the Driver page
   if (document.getElementById("start") && document.getElementById("stop")) {
@@ -37,29 +37,21 @@ function initNavbar() {
   fetch('navbar.html')
     .then(res => res.text())
     .then(data => {
-      const navPlaceholder = document.getElementById('navbar-placeholder');
-      if (navPlaceholder) {
-        navPlaceholder.innerHTML = data;
+      document.getElementById('navbar-placeholder').innerHTML = data;
+      initCart();
+      loadCheckoutSummary();
 
-        // Start cart logic if it's available
-        if (typeof initCart === 'function') initCart();
-        if (typeof loadCheckoutSummary === 'function') loadCheckoutSummary();
-
-        // Prevents the page from scrolling when you're scrolling inside the mini-cart
-        const cartScroll = document.querySelector('.cart-scroll');
-        if (cartScroll) {
-          cartScroll.addEventListener('wheel', e => e.stopPropagation());
-          cartScroll.addEventListener('touchmove', e => e.stopPropagation());
-        }
+      const cartScroll = document.querySelector('.cart-scroll');
+      if (cartScroll) {
+        cartScroll.addEventListener('wheel', e => e.stopPropagation());
+        cartScroll.addEventListener('touchmove', e => e.stopPropagation());
       }
     })
-    .catch(err => console.error('Navbar Error:', err));
+    .catch(err => console.error(err));
 }
 
 // Sets up the Lenis library for smooth, modern scrolling effects
 function initLenis() {
-  if (typeof Lenis === 'undefined') return;
-
   const lenis = new Lenis({
     duration: 1.1,
     smooth: true,
