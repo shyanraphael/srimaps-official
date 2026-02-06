@@ -287,7 +287,7 @@ input:focus {
   padding: 40px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
   max-width: 400px;
-  width: 100%;
+  width: 90%;
   text-align: center;
   position: fixed;
   top: 50%;
@@ -297,14 +297,14 @@ input:focus {
 
 .driver-panel h2 {
   color: #333;
-  font-size: 28px;
+  font-size: clamp(24px, 5vw, 28px);
   margin-bottom: 30px;
   font-weight: 600;
 }
 
 .driver-panel p {
   color: #666;
-  font-size: 18px;
+  font-size: clamp(16px, 3.5vw, 18px);
   margin-bottom: 25px;
   line-height: 1.6;
 }
@@ -314,8 +314,8 @@ input:focus {
   font-weight: 600;
 }
 
-.driver-start {
-  background: #07903b;
+.driver-start,
+.driver-stop {
   color: white;
   width: 100%;
   padding: 16px 24px;
@@ -325,31 +325,21 @@ input:focus {
   border-radius: 12px;
   cursor: pointer;
   margin-bottom: 15px;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.driver-start:hover {
-  opacity: 0.9;
+.driver-start {
+  background: #07903b;
 }
 
 .driver-stop {
   background: #b71a2d;
-  color: white;
-  width: 100%;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  margin-bottom: 15px;
 }
 
+.driver-start:hover,
 .driver-stop:hover {
-  opacity: 0.9;
-}
-
-.driver-stop:active {
-  transform: translateY(0);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
 }
 
 .driver-status {
@@ -362,32 +352,26 @@ input:focus {
   margin-bottom: 0;
 }
 
-/* responsiveness */
 @media (max-width: 480px) {
   .driver-panel {
-    padding: 30px 25px;
-  }
-
-  .driver-panel h2 {
-    font-size: 24px;
-  }
-
-  .driver-panel p {
-    font-size: 16px;
+    padding: 25px 20px;
+    width: 95%;
   }
 }
 
 /* <--- driver.html End -----> */
 
 /* <--- busSchedul.html Beginning ---> */
-
 .schedule-container {
-  max-width: 1200px;
-  margin: 150px auto;
+  max-width: 1100px;
+  margin: 0 auto;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  max-height: 190vh;
+  overflow-y: auto;
+  width: 90%;
+  margin-top: 25vh;
 }
 
 .schedule-container-header {
@@ -399,17 +383,17 @@ input:focus {
 }
 
 .schedule-container-h1 {
-  font-size: 2.5em;
+  font-size: clamp(1.5em, 5vw, 2.5em);
   margin-bottom: 10px;
 }
 
 .schedule-subtitle {
-  font-size: 1.1em;
+  font-size: clamp(0.9em, 3vw, 1.1em);
   opacity: 0.9;
 }
 
 .schedule-controls {
-  padding: 20px 30px;
+  padding: 20px;
   background: #f8f9ff;
   border-bottom: 2px solid #4a5de8;
   display: flex;
@@ -428,7 +412,9 @@ input:focus {
   display: flex;
   gap: 10px;
   align-items: center;
-  white-space: nowrap;
+  flex-wrap: wrap;
+  width: 100%;
+  justify-content: center;
 }
 
 .schedule-input-route[type="text"] {
@@ -439,7 +425,9 @@ input:focus {
   background: white;
   color: black;
   transition: all 0.3s;
-  width: 250px;
+  width: 100%;
+  max-width: 250px;
+  min-width: 200px;
 }
 
 .schedule-input-route[type="text"]:focus {
@@ -448,16 +436,21 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
-.schedule-searchBtn {
+.schedule-searchBtn,
+.schedule-clearBtn {
   padding: 10px 20px;
   border: none;
   border-radius: 8px;
   font-size: 1em;
-  background: #4a5de8;
   color: white;
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s;
+  white-space: nowrap;
+}
+
+.schedule-searchBtn {
+  background: #4a5de8;
 }
 
 .schedule-searchBtn:hover {
@@ -467,25 +460,19 @@ input:focus {
 }
 
 .schedule-clearBtn {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 1em;
   background: #4b5563;
-  color: white;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s;
 }
 
 .schedule-clearBtn:hover {
-  background: #4b5563;
+  background: #374151;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .schedule-grid {
-  padding: 30px;
+  padding: clamp(15px, 3vw, 30px);
+  max-height: 50vh;
+  overflow-y: auto;
 }
 
 .route-section {
@@ -502,29 +489,42 @@ input:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .route-number {
-  font-size: 1.5em;
+  font-size: clamp(1.2em, 4vw, 1.5em);
   font-weight: bold;
 }
 
 .route-name {
-  font-size: 1.1em;
+  font-size: clamp(0.9em, 3vw, 1.1em);
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   background: white;
+  overflow-x: auto;
+  display: block;
 }
 
 thead {
   background: #f8f9ff;
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+tbody {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
 }
 
 th {
-  padding: 15px;
+  padding: clamp(10px, 2vw, 15px);
   text-align: left;
   color: black;
   font-weight: 600;
@@ -532,7 +532,7 @@ th {
 }
 
 td {
-  padding: 12px 15px;
+  padding: clamp(8px, 2vw, 12px) clamp(10px, 2vw, 15px);
   color: black;
   border-bottom: 1px solid #e0e7ff;
 }
@@ -546,23 +546,44 @@ tr:hover {
   color: #4a5de8;
 }
 
+/* Mobile Responsive */
 @media (max-width: 768px) {
-  .schedule-container-h1 {
-    font-size: 1.8em;
+  .schedule-container {
+    width: 95%;
+    border-radius: 10px;
+  }
+
+  .schedule-container-header {
+    padding: 20px;
   }
 
   .schedule-controls {
+    padding: 15px;
+  }
+
+  .schedule-route-filter {
     flex-direction: column;
     align-items: stretch;
   }
 
-  table {
-    font-size: 0.9em;
+  .schedule-input-route[type="text"],
+  .schedule-searchBtn,
+  .schedule-clearBtn {
+    width: 100%;
+    max-width: none;
   }
 
-  th,
-  td {
-    padding: 10px;
+  .route-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  table {
+    font-size: 0.85em;
+  }
+
+  .schedule-grid {
+    max-height: 60vh;
   }
 }
 
@@ -598,16 +619,6 @@ tr:hover {
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
-}
-
-.lostfound-back-link {
-  text-decoration: none;
-  color: #666;
-  font-size: 0.9rem;
-}
-
-.lostfound-back-link:hover {
-  color: #4a5de8;
 }
 
 /* Tabs */
@@ -787,13 +798,16 @@ tr:hover {
 
 .lostfound-modal-content {
   background-color: #fff;
-  margin: 15% auto;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 500px;
   border-radius: 8px;
-  position: relative;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1001;
 }
 
 .lostfound-modal-close {
@@ -818,16 +832,38 @@ tr:hover {
   height: 100%;
 }
 
+/* Responsive Design */
+@media (max-width: 768px) {
+
+  .lostfound-container,
+  .lostfound-header {
+    margin-left: 15px;
+    margin-right: 15px;
+    padding: 20px;
+  }
+
+  .lostfound-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .lostfound-modal-content {
+    width: 90%;
+  }
+}
+
 /* <--- lostFound.html Ends ---> */
 
 /* <--- realAlerts.html Beginning ---> */
 .realAlerts-container {
-  max-width: 1200px;
-  margin: 150px auto;
+  max-width: 1100px;
+  margin: 0 auto;
   background: white;
-  border-radius: 15px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  overflow: hidden;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  max-height: 190vh;
+  overflow-y: auto;
+  width: 90%;
+  margin-top: 25vh;
 }
 
 .realAlerts-container-header {
@@ -873,6 +909,8 @@ tr:hover {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .alert-header h3 {
@@ -892,4 +930,132 @@ tr:hover {
   margin: 0;
 }
 
+/* Simple Responsive */
+@media (max-width: 768px) {
+  .realAlerts-container {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .realAlerts-container-h1 {
+    font-size: 1.8em;
+  }
+
+  .alerts-container {
+    padding: 20px;
+  }
+}
+
 /* <--- realAlerts.html Ends ---> */
+
+
+/* <--- busNews.html Beginning ---> */
+.News-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  max-height: 190vh;
+  overflow-y: auto;
+  width: 90%;
+  margin-top: 25vh;
+}
+
+.News-container-header {
+  background: linear-gradient(90deg, #3b4ee6 0%, #5a74ff 100%);
+  color: #fff;
+  padding: 28px 24px;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.News-container-h1 {
+  font-size: 2rem;
+  margin: 0 0 6px 0;
+  font-weight: 700;
+}
+
+.News-subtitle {
+  font-size: 1rem;
+  opacity: 0.95;
+}
+
+.News-container-content {
+  padding: 22px 26px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+
+/* Individual news item */
+.news-item {
+  background: #ffffff;
+  border-radius: 10px;
+  padding: 18px;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.news-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.09);
+}
+
+.news-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.news-header h3 {
+  font-size: 1.05rem;
+  color: #0F172A;
+  margin: 0;
+  font-weight: 700;
+}
+
+.news-date {
+  font-size: 0.9rem;
+  color: #64748B;
+}
+
+.news-summary {
+  font-size: 0.98rem;
+  color: #0f172a;
+  margin: 0 0 6px 0;
+  font-weight: 600;
+}
+
+.news-details {
+  color: #475569;
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .News-container {
+    width: 95%;
+    max-height: 85vh;
+  }
+
+  .News-container-h1 {
+    font-size: 1.6rem;
+  }
+
+  .News-container-content {
+    padding: 16px;
+    grid-template-columns: 1fr;
+  }
+}
+
+/* <--- busNews.html Ends ---> */

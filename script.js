@@ -51,6 +51,15 @@ document.addEventListener("DOMContentLoaded", () => {
       loadAlertsData();
     }, 100);
   }
+
+  // Loading the bus news data from JSON file
+  if (document.getElementById('NewsContainer')) {
+    console.log('News container found, loading bus news from busNews.json...');
+    // Small delay to ensure navbar and other async content is loaded
+    setTimeout(() => {
+      loadBusNewsData();
+    }, 100);
+  }
 });
 
 // Driver HTML
@@ -322,4 +331,57 @@ function displayAlerts(alertsData) {
 }
 
 // <--- realAlerts.html Ends ---> //
+
+// <--- busNews.html Beginning ---> //
+
+// Load bus news data
+async function loadBusNewsData() {
+  console.log('Loading bus news data...');
+  try {
+    const response = await fetch('busNews.json');
+    console.log('Fetch response status:', response.status);
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const newsData = await response.json();
+    console.log('Bus news data loaded successfully:', newsData);
+    displayBusNews(newsData);
+  } catch (error) {
+    console.error('Error loading bus news data:', error);
+    // Fallback: display error message
+    const container = document.getElementById('NewsContainer');
+    if (container) container.innerHTML = '<p>Unable to load bus news at this time. Please try again later.</p>';
+  }
+}
+
+// Display bus news using fields from busNews.json
+function displayBusNews(newsData) {
+  const container = document.getElementById('NewsContainer');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!Array.isArray(newsData) || newsData.length === 0) {
+    container.innerHTML = '<p>No active bus news at this time.</p>';
+    return;
+  }
+
+  newsData.forEach(item => {
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'news-item';
+    itemDiv.innerHTML = `
+      <div class="news-header">
+        <h3>${item.title}</h3>
+        <span class="news-date">${new Date(item.date).toLocaleDateString()}</span>
+      </div>
+      <div class="news-body">
+        <p class="news-summary">${item.summary}</p>
+        <p class="news-details">${item.details}</p>
+      </div>
+    `;
+
+    container.appendChild(itemDiv);
+  });
+}
+
+// <--- busNews.html Ends ---> //
 
