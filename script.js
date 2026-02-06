@@ -1,22 +1,65 @@
-// DOM Content Loaded Event Listener
 document.addEventListener("DOMContentLoaded", () => {
-  // Navbar
+
+  //  Run features that appear on every single page
+  initNavbar(); // Loads the navigation menu
+  initLenis();  // Enables smooth scrolling
+
+  // Checks if we are on the Driver page
+  if (document.getElementById("start") && document.getElementById("stop")) {
+    initDriverPage();
+  }
+
+  // Checks if we are on the Bus Schedule page
+  if (document.getElementById('scheduleGrid')) {
+    initBusSchedulePage();
+  }
+
+  // Checks if we are on the Lost & Found page
+  if (document.getElementById('lost') && document.getElementById('found')) {
+    initLostFoundPage();
+  }
+
+  // Checks if the page has an Alerts section
+  if (document.getElementById('alertsContainer')) {
+    initAlertsSection();
+  }
+
+  // Checks if the page has a News section
+  if (document.getElementById('NewsContainer')) {
+    initNewsSection();
+  }
+});
+
+/* <---- GLOBAL FUNCTIONS: Shared across all pages ----> */
+
+// Fetches the navbar.html file and injects it into the placeholder div
+function initNavbar() {
   fetch('navbar.html')
     .then(res => res.text())
     .then(data => {
-      document.getElementById('navbar-placeholder').innerHTML = data;
-      initCart();
-      loadCheckoutSummary();
+      const navPlaceholder = document.getElementById('navbar-placeholder');
+      if (navPlaceholder) {
+        navPlaceholder.innerHTML = data;
 
-      const cartScroll = document.querySelector('.cart-scroll');
-      if (cartScroll) {
-        cartScroll.addEventListener('wheel', e => e.stopPropagation());
-        cartScroll.addEventListener('touchmove', e => e.stopPropagation());
+        // Start cart logic if it's available
+        if (typeof initCart === 'function') initCart();
+        if (typeof loadCheckoutSummary === 'function') loadCheckoutSummary();
+
+        // Prevents the page from scrolling when you're scrolling inside the mini-cart
+        const cartScroll = document.querySelector('.cart-scroll');
+        if (cartScroll) {
+          cartScroll.addEventListener('wheel', e => e.stopPropagation());
+          cartScroll.addEventListener('touchmove', e => e.stopPropagation());
+        }
       }
     })
-    .catch(err => console.error(err));
+    .catch(err => console.error('Navbar Error:', err));
+}
 
-  // Lenis stuff
+// Sets up the Lenis library for smooth, modern scrolling effects
+function initLenis() {
+  if (typeof Lenis === 'undefined') return;
+
   const lenis = new Lenis({
     duration: 1.1,
     smooth: true,
@@ -30,97 +73,128 @@ document.addEventListener("DOMContentLoaded", () => {
     lenis.raf(time);
     requestAnimationFrame(raf);
   }
-
   requestAnimationFrame(raf);
-
-  // Loading lost and found items from our lost_found.JSON file
-  fetch('lost_found.json')
-    .then(response => response.json())
-    .then(items => {
-      populateLostFound(items);
-    })
-    .catch(error => {
-      console.error('Error loading JSON:', error);
-    });
-
-  // Loading the alerts data from JSON file
-  if (document.getElementById('alertsContainer')) {
-    console.log('Alerts container found, loading alerts...');
-    // Small delay to ensure navbar and other async content is loaded
-    setTimeout(() => {
-      loadAlertsData();
-    }, 100);
-  }
-
-  // Loading the bus news data from JSON file
-  if (document.getElementById('NewsContainer')) {
-    console.log('News container found, loading bus news from busNews.json...');
-    // Small delay to ensure navbar and other async content is loaded
-    setTimeout(() => {
-      loadBusNewsData();
-    }, 100);
-  }
-});
-
-// Driver HTML
-// DRIVER STARTS SHARING LOCATION
-document.getElementById("start")?.addEventListener("click", () => {
-  navigator.geolocation.watchPosition(pos => {
-    const location = {
-      lat: pos.coords.latitude,
-      lng: pos.coords.longitude,
-      time: Date.now()
-    };
-
-    localStorage.setItem("driverLocation", JSON.stringify(location));
-    document.getElementById("status").innerText = "GPS: Active";
-  });
-});
-
-// PASSENGER READS LOCATION
-const stored = localStorage.getItem("driverLocation");
-if (stored) {
-  const busLocation = JSON.parse(stored);
-  console.log("Bus is at:", busLocation.lat, busLocation.lng);
 }
 
-// <--- busSchedule.html Beginning ---> //
+// Opens and closes the mobile hamburger menu
+window.toggleMenu = function () {
+  const navLinks = document.querySelector('.nav-list');
+  const menuToggle = document.querySelector('.menu-toggle');
+  if (navLinks && menuToggle) {
+    navLinks.classList.toggle('active');
+    menuToggle.classList.toggle('active');
+  }
+};
 
-// Load schedule data from JSON file
-async function loadScheduleData() {
+/* <------ DRIVER PAGE ----> */
+
+function initDriverPage() {
+  console.log("Initializing Driver Page...");
+  let watchId = null;
+  const statusDisplay = document.getElementById("status");
+  const stopBtn = document.getElementById("stop");
+
+  // Starts tracking the driver's location when "Start" is clicked
+  document.getElementById("start").addEventListener("click", () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
+    // Continuously watches the GPS position
+    watchId = navigator.geolocation.watchPosition(
+      pos => {
+        const location = {
+          lat: pos.coords.latitude,
+          lng: pos.coords.longitude,
+          time: Date.now()
+        };
+        // Saves location to browser storage (LocalStorage)
+        localStorage.setItem("driverLocation", JSON.stringify(location));
+
+        statusDisplay.innerText = "GPS: Active";
+        statusDisplay.classList.add("active");
+        stopBtn.classList.add("active");
+      },
+      error => alert("GPS Error: " + error.message)
+    );
+  });
+
+  // Stops the GPS tracking
+  stopBtn.addEventListener("click", () => {
+    if (watchId) {
+      navigator.geolocation.clearWatch(watchId);
+      watchId = null;
+      localStorage.removeItem("driverLocation");
+
+      statusDisplay.innerText = "GPS: Off";
+      statusDisplay.classList.remove("active");
+      stopBtn.classList.remove("active");
+    }
+  });
+}
+
+/* <----- BUS SCHEDULE PAGE ----> */
+
+let scheduleData = []; // Holds the list of bus routes
+
+async function initBusSchedulePage() {
+  console.log("Initializing Schedule Page...");
+
+  const searchBtn = document.getElementById('searchBtn');
+  const clearBtn = document.getElementById('clearBtn');
+  const searchInput = document.getElementById('routeSearch');
+
+  // Assign search actions to buttons and "Enter" key
+  if (searchBtn) searchBtn.addEventListener('click', performSearch);
+  if (clearBtn) clearBtn.addEventListener('click', clearSearch);
+  if (searchInput) {
+    searchInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') performSearch();
+    });
+  }
+
+  // Load the schedule data from the JSON file
   try {
     const response = await fetch('BusSchedule.json');
-    if (!response.ok) {
-      throw new Error('Failed to load schedule data');
-    }
+    if (!response.ok) throw new Error('Failed to load schedule');
+
     scheduleData = await response.json();
-    console.log('Schedule data loaded successfully');
+    renderSchedule(null); // Show "Please enter a route" message initially
   } catch (error) {
-    console.error('Error loading schedule data:', error);
+    console.error('Error loading schedule:', error);
+    document.getElementById('scheduleGrid').innerHTML = '<div class="error">Failed to load schedule data.</div>';
   }
 }
 
-// Render schedule
+// Handles drawing the schedule tables on the page
 function renderSchedule(searchQuery = null) {
   const grid = document.getElementById('scheduleGrid');
+  if (!grid) return;
+
   grid.innerHTML = '';
 
-  // Filter data based on search
+  // Show instruction message if search is empty
+  if (!searchQuery) {
+    grid.innerHTML = '<div class="no-results">Please enter a route number to view the schedule.</div>';
+    return;
+  }
+
+  // Filter the list to find matching route numbers
   const filteredData = scheduleData.filter(route =>
     route.route.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // If no results found
+  // Show "not found" message if no routes match
   if (filteredData.length === 0) {
-    grid.innerHTML = '<div class="no-results"> No routes found matching </div>';
+    grid.innerHTML = '<div class="no-results">No routes found matching your search.</div>';
     return;
   }
 
-  // Display results
+  // Build the HTML table for each matching route
   filteredData.forEach(route => {
     const section = document.createElement('div');
     section.className = 'route-section';
-
     section.innerHTML = `
       <div class="route-header">
         <div>
@@ -129,104 +203,89 @@ function renderSchedule(searchQuery = null) {
         </div>
       </div>
       <table>
-        <thead>
-          <tr>
-            <th>Stop</th>
-            <th>Departure Time</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Stop</th><th>Departure Time</th></tr></thead>
         <tbody>
           ${route.stops.map(stop => `
-            <tr>
-              <td>${stop.stop}</td>
-              <td class="route-time">${stop.time}</td>
-            </tr>
+            <tr><td>${stop.stop}</td><td class="route-time">${stop.time}</td></tr>
           `).join('')}
         </tbody>
       </table>
     `;
-
     grid.appendChild(section);
   });
 }
 
-// Search function
+// Gets the text from the search box and triggers the render
 function performSearch() {
   const searchInput = document.getElementById('routeSearch');
-  const searchQuery = searchInput.value.trim();
-
-  if (searchQuery === '') {
+  const val = searchInput.value.trim();
+  if (val === '') {
     alert('Please enter a route number to search');
     return;
   }
-
-  renderSchedule(searchQuery);
+  renderSchedule(val);
 }
 
-// Clear function
+// Resets the search results
 function clearSearch() {
   document.getElementById('routeSearch').value = '';
   renderSchedule(null);
 }
 
-// Event listeners
-document.getElementById('searchBtn').addEventListener('click', performSearch);
-document.getElementById('clearBtn').addEventListener('click', clearSearch);
+/* <---- LOST & FOUND PAGE -----> */
 
-// Allow Enter key to search
-document.getElementById('routeSearch').addEventListener('keypress', (e) => {
-  if (e.key === 'Enter') {
-    performSearch();
-  }
-});
+function initLostFoundPage() {
+  const tabs = document.querySelectorAll('.lostfound-tab-btn');
+  const sections = document.querySelectorAll('.lostfound-content-section');
 
-// Initialize
-async function init() {
-  await loadScheduleData(); // Load data from JSON file first
-  updateTime();
-  setInterval(updateTime, 1000);
-  renderSchedule(null); // Start with no results shown
+  // Handles clicking "Lost" vs "Found" tabs
+  tabs.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const targetId = btn.dataset.tab;
+
+      // Highlight the active button
+      tabs.forEach(t => t.classList.remove('active'));
+      btn.classList.add('active');
+
+      // Hide all content and show only the chosen one
+      sections.forEach(sec => sec.classList.add('hidden'));
+      document.getElementById(targetId).classList.remove('hidden');
+    });
+  });
+
+  // Load items from the JSON file
+  fetch('lost_found.json')
+    .then(res => res.json())
+    .then(items => populateLostFound(items));
 }
 
-init();
+// Fallback function for switching tabs using old HTML onclick methods
+window.showTab = function (tabId) {
+  const btns = document.querySelectorAll('.lostfound-tab-btn');
+  const sections = document.querySelectorAll('.lostfound-content-section');
 
-// <--- busSchedule.html Ends ---> //
+  btns.forEach(btn => btn.classList.remove('active'));
+  sections.forEach(sec => sec.classList.add('hidden'));
 
+  document.getElementById(tabId).classList.remove('hidden');
 
-
-// <--- lostFound.html Beginning ---> //
-
-// Switching between tabs - pretty standard stuff
-function showTab(tab) {
-  document.querySelectorAll('.lostfound-tab-btn').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  // Make the clicked one active
-  event.target.classList.add('active');
-
-  // Hide all sections first
-  document.querySelectorAll('.lostfound-content-section').forEach(section => {
-    section.classList.add('hidden');
-  });
-  // Then show the one we want
-  document.getElementById(tab).classList.remove('hidden');
+  const activeBtn = Array.from(btns).find(b => b.textContent.toLowerCase().includes(tabId));
+  if (activeBtn) activeBtn.classList.add('active');
 }
 
-// Building all the lost/found cards dynamically
+// Creates the item cards (Wallet, Keys, etc.) dynamically
 function populateLostFound(items) {
   const lostGrid = document.querySelector('#lost .lostfound-grid');
   const foundGrid = document.querySelector('#found .lostfound-grid');
 
-  // Start fresh each time
+  if (!lostGrid || !foundGrid) return;
+
   lostGrid.innerHTML = '';
   foundGrid.innerHTML = '';
 
-  // Go through each item and make a card
   items.forEach(item => {
     const card = document.createElement('div');
     card.className = 'lostfound-card';
-
-    // Fill it with the item's info using template strings
     card.innerHTML = `
       <div class="lostfound-card-top">
         <span style="font-size: 1.8rem;">${item.emoji}</span>
@@ -245,25 +304,21 @@ function populateLostFound(items) {
       </div>
     `;
 
-    // Put it in the right grid
-    if (item.type === 'lost') {
-      lostGrid.appendChild(card);
-    } else {
-      foundGrid.appendChild(card);
-    }
+    // Put the card in the correct category
+    if (item.type === 'lost') lostGrid.appendChild(card);
+    else foundGrid.appendChild(card);
 
-    // Make the details button actually work
-    const detailsBtn = card.querySelector('.details-btn');
-    detailsBtn.addEventListener('click', () => showDetails(item));
+    // Open the detail modal when the button is clicked
+    card.querySelector('.details-btn').addEventListener('click', () => showDetails(item));
   });
 }
 
-// Pop up the details modal when someone clicks
+// Shows a pop-up (modal) with more info about a specific item
 function showDetails(item) {
   const modal = document.getElementById('details-modal');
   const modalBody = document.getElementById('modal-body');
+  if (!modal || !modalBody) return;
 
-  // Fill the modal with this item's details
   modalBody.innerHTML = `
     <h2>${item.emoji} ${item.name}</h2>
     <p><strong>Status:</strong> ${item.type.charAt(0).toUpperCase() + item.type.slice(1)}</p>
@@ -271,117 +326,67 @@ function showDetails(item) {
     <p><strong>Location:</strong> ${item.location}</p>
     <p><strong>Description:</strong> ${item.description}</p>
   `;
-
-  // Show the modal
   modal.style.display = 'block';
 }
 
-// Close the modal - simple as that
-function closeModal() {
+// Hides the pop-up
+window.closeModal = function () {
   const modal = document.getElementById('details-modal');
-  modal.style.display = 'none';
+  if (modal) modal.style.display = 'none';
 }
 
-// <--- lostFound.html Ends ---> //
+/* <------ ALERTS & NEWS PAGES ----- > */
 
-// <--- realAlerts.html Beginning ---> //
+// Loads safety alerts (like weather or delays) from JSON
+function initAlertsSection() {
+  fetch('alerts.json')
+    .then(res => res.ok ? res.json() : Promise.reject(res.status))
+    .then(data => {
+      const container = document.getElementById('alertsContainer');
+      if (!container) return;
 
-// Load alerts data
-async function loadAlertsData() {
-  console.log('Loading alerts data...');
-  try {
-    const response = await fetch('alerts.json');
-    console.log('Fetch response status:', response.status);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const alertsData = await response.json();
-    console.log('Alerts data loaded successfully:', alertsData);
-    displayAlerts(alertsData);
-  } catch (error) {
-    console.error('Error loading alerts data:', error);
-    // Fallback: display error message
-    const container = document.getElementById('alertsContainer');
-    container.innerHTML = '<p>Unable to load alerts at this time. Please try again later.</p>';
-  }
+      if (data.length === 0) {
+        container.innerHTML = '<p>No active alerts.</p>';
+        return;
+      }
+      container.innerHTML = data.map(alert => `
+        <div class="alert">
+          <div class="alert-header">
+            <h3>${alert.title}</h3>
+            <span class="alert-time">${new Date(alert.timestamp).toLocaleString()}</span>
+          </div>
+          <p>${alert.message}</p>
+        </div>
+      `).join('');
+    })
+    .catch(err => console.error('Alerts Error:', err));
 }
 
-// Display alerts
-function displayAlerts(alertsData) {
-  const container = document.getElementById('alertsContainer');
-  container.innerHTML = '';
+// Loads general bus news from JSON
+function initNewsSection() {
+  fetch('busNews.json')
+    .then(res => res.ok ? res.json() : Promise.reject(res.status))
+    .then(data => {
+      const container = document.getElementById('NewsContainer');
+      if (!container) return;
 
-  if (alertsData.length === 0) {
-    container.innerHTML = '<p>No active alerts at this time.</p>';
-    return;
-  }
+      if (!Array.isArray(data) || data.length === 0) {
+        container.innerHTML = '<p>No active news.</p>';
+        return;
+      }
 
-  alertsData.forEach(alert => {
-    const alertDiv = document.createElement('div');
-    alertDiv.className = 'alert';
-    alertDiv.innerHTML = `
-      <div class="alert-header">
-        <h3>${alert.title}</h3>
-        <span class="alert-time">${new Date(alert.timestamp).toLocaleString()}</span>
-      </div>
-      <p>${alert.message}</p>
-    `;
-    container.appendChild(alertDiv);
-  });
+      container.innerHTML = data.map(item => `
+        <div class="news-item">
+          <div class="news-header">
+            <h3>${item.title}</h3>
+            <span class="news-date">${new Date(item.date).toLocaleDateString()}</span>
+          </div>
+          <div class="news-body">
+            <p class="news-summary">${item.summary}</p>
+            <p class="news-details">${item.details}</p>
+          </div>
+        </div>
+      `).join('');
+    })
+    .catch(err => console.error('News Error:', err));
 }
-
-// <--- realAlerts.html Ends ---> //
-
-// <--- busNews.html Beginning ---> //
-
-// Load bus news data
-async function loadBusNewsData() {
-  console.log('Loading bus news data...');
-  try {
-    const response = await fetch('busNews.json');
-    console.log('Fetch response status:', response.status);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const newsData = await response.json();
-    console.log('Bus news data loaded successfully:', newsData);
-    displayBusNews(newsData);
-  } catch (error) {
-    console.error('Error loading bus news data:', error);
-    // Fallback: display error message
-    const container = document.getElementById('NewsContainer');
-    if (container) container.innerHTML = '<p>Unable to load bus news at this time. Please try again later.</p>';
-  }
-}
-
-// Display bus news using fields from busNews.json
-function displayBusNews(newsData) {
-  const container = document.getElementById('NewsContainer');
-  if (!container) return;
-  container.innerHTML = '';
-
-  if (!Array.isArray(newsData) || newsData.length === 0) {
-    container.innerHTML = '<p>No active bus news at this time.</p>';
-    return;
-  }
-
-  newsData.forEach(item => {
-    const itemDiv = document.createElement('div');
-    itemDiv.className = 'news-item';
-    itemDiv.innerHTML = `
-      <div class="news-header">
-        <h3>${item.title}</h3>
-        <span class="news-date">${new Date(item.date).toLocaleDateString()}</span>
-      </div>
-      <div class="news-body">
-        <p class="news-summary">${item.summary}</p>
-        <p class="news-details">${item.details}</p>
-      </div>
-    `;
-
-    container.appendChild(itemDiv);
-  });
-}
-
-// <--- busNews.html Ends ---> //
-
