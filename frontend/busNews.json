@@ -1,0 +1,16 @@
+[
+    {
+        "id": 1,
+        "title": "New Route Launched",
+        "date": "2026-02-05",
+        "summary": "Route 12A extended to East Park.",
+        "details": "Effective from Feb 10, Route 12A will serve East Park every 30 minutes."
+    },
+    {
+        "id": 2,
+        "title": "Delayed Services Due to Maintenance",
+        "date": "2026-01-28",
+        "summary": "Expect delays on Main Line during night hours.",
+        "details": "Night maintenance between 00:00-04:00 causes reduced frequency."
+    }
+]

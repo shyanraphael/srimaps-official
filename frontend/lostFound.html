@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SriMaps | Lost and Found</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            <div id="navbar-placeholder"></div>
+
+
+            <div class="animated-bg">
+                <span class="blob blob-1"></span>
+                <span class="blob blob-2"></span>
+                <span class="blob blob-3"></span>
+                <span class="blob blob-4"></span>
+            </div>
+
+            <div class="lostfound-container">
+                <header class="lostfound-header">
+                    <div class="lostfound-title">Lost and Found</div>
+                </header>
+
+                <div class="lostfound-tabs">
+                    <button class="lostfound-tab-btn active" data-tab="lost">Lost Items</button>
+                    <button class="lostfound-tab-btn" data-tab="found">Found Items</button>
+                    <button class="lostfound-tab-btn" data-tab="report">Report New</button>
+                </div>
+
+                <div id="lost" class="lostfound-content-section">
+                    <div class="lostfound-grid">
+                    </div>
+                </div>
+
+                <!-- Lost items will be populated here -->
+
+                <div id="found" class="lostfound-content-section hidden">
+                    <div class="lostfound-grid">
+                    </div>
+                </div>
+
+                <!-- Found items will be populated here -->
+
+                <div id="report" class="lostfound-content-section hidden">
+                    <h2 style="margin-bottom: 20px;">Report an Item</h2>
+                    <form>
+                        <div class="lostfound-form-group">
+                            <label class="lostfound-label">What happened?</label>
+                            <select class="lostfound-select">
+                                <option>I lost an item</option>
+                                <option>I found an item</option>
+                            </select>
+                        </div>
+                        <div class="lostfound-form-group">
+                            <label class="lostfound-label">Item Name</label>
+                            <input type="text" class="lostfound-input" placeholder="e.g. Blue Hat">
+                        </div>
+                        <div class="lostfound-form-group">
+                            <label class="lostfound-label">Description</label>
+                            <textarea rows="4" class="lostfound-textarea"
+                                placeholder="Details about the item..."></textarea>
+                        </div>
+                        <div class="lostfound-form-group">
+                            <label class="lostfound-label">Contact Info</label>
+                            <input type="email" class="lostfound-input" placeholder="your@email.com">
+                        </div>
+                        <button type="button" class="lostfound-btn lostfound-btn-primary">Submit Report</button>
+                    </form>
+                </div>
+
+            </div>
+
+            <!-- Modal for Details -->
+            <div id="details-modal" class="lostfound-modal">
+                <div class="lostfound-modal-overlay" onclick="closeModal()"></div>
+                <div class="lostfound-modal-content">
+                    <span class="lostfound-modal-close" onclick="closeModal()">&times;</span>
+                    <div id="modal-body">
+                        <!-- Details will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.16/dist/lenis.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
