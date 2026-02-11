@@ -10,6 +10,16 @@
 
 #smooth-content {
   min-height: 100vh;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 700ms cubic-bezier(.2,.9,.2,1), transform 700ms cubic-bezier(.2,.9,.2,1);
+  will-change: opacity, transform;
+}
+
+/* Page open animation - add `.animate-in` to `#smooth-content` on load */
+#smooth-content.animate-in {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 * {
@@ -39,7 +49,7 @@ a {
   width: 100%;
   background: rgba(248, 250, 252, 0.98);
   backdrop-filter: blur(10px);
-  padding: 0.8rem 5%;
+  padding: 1.6rem 5%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,7 +62,7 @@ a {
 .nav-left {
   font-size: 1.8rem;
   font-weight: bold;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.85) 0%, rgba(59, 130, 246, 0.85) 50%, rgba(96, 165, 250, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(37, 235, 139, 0.85) 0%, rgba(158, 255, 172, 0.85) 50%, rgba(142, 250, 96, 0.9) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -87,7 +97,7 @@ a {
 }
 
 .nav-item:hover {
-  color: #2563EB;
+  color: #0ca678;
 }
 
 /* Hover Box */
@@ -95,8 +105,8 @@ a {
   position: absolute;
   top: 140%;
   left: 50%;
-  background: #2563EB;
-  color: #FFFFFF;
+  background: #0ca678;
+  color: #0a0a0a;
   padding: 12px 16px;
   border-radius: 12px;
   width: 220px;
@@ -117,13 +127,23 @@ a {
 .language-select {
   border: 1px solid #E2E8F0;
   padding: 4px 8px;
-  border-radius: 6px;
+  border-radius: 20px;
   font-size: 0.9rem;
   background: transparent;
   cursor: pointer;
   color: #333;
   font-weight: 500;
   outline: none;
+}
+
+.language-select:focus {
+  background: #0ca678;
+  color: white;
+}
+
+.language-select option {
+  background: #0a0a0a;
+  color: white;
 }
 
 /* Mobile Menu Toggle */
@@ -254,28 +274,28 @@ a {
 }
 
 .blob-1 {
-  background: radial-gradient(circle, #93C5FD, transparent 100%);
+  background: radial-gradient(circle, #90ff4b, transparent 100%);
   top: 10%;
   left: 15%;
   animation-duration: 22s;
 }
 
 .blob-2 {
-  background: radial-gradient(circle, #CBD5E1, transparent 100%);
+  background: radial-gradient(circle, #0ca678, transparent 100%);
   top: 50%;
   left: 60%;
   animation-duration: 26s;
 }
 
 .blob-3 {
-  background: radial-gradient(circle, #C7D2FE, transparent 100%);
+  background: radial-gradient(circle, #0ca678, transparent 100%);
   top: 70%;
   left: 20%;
   animation-duration: 30s;
 }
 
 .blob-4 {
-  background: radial-gradient(circle, #99F6E4, transparent 100%);
+  background: radial-gradient(circle, #90ff4b, transparent 100%);
   top: 30%;
   left: 75%;
   animation-duration: 24s;
@@ -359,8 +379,7 @@ a {
 }
 
 .search-input:focus {
-  border-color: #2563EB;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 20px 3px rgba(154, 255, 66, 0.15);
   transform: translateY(-1px);
 }
 
@@ -391,8 +410,7 @@ a {
 }
 
 .single-input:focus {
-  border-color: #2563EB;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  box-shadow: 0 0 20px 3px rgba(154, 255, 66, 0.15);
 }
 
 .proceed-btn {
@@ -401,25 +419,32 @@ a {
   font-size: 16px;
   border-radius: 12px;
   border: none;
-  background: #2563EB;
+  background: black;
   color: #FFFFFF;
   cursor: pointer;
   transition: background 0.2s ease;
 }
 
 .proceed-btn:hover {
-  background: #1D4ED8;
+  background: #0ca678;
 }
 
 .findAnyBus {
-  font-size: 32px;
+  font-size: 50px;
   font-weight: 700;
-  color: #0F172A;
+  margin-bottom: 10px;
+}
+
+.search-card-header {
+  background: #0a0a0a;
+  color: white;
+  padding: 30px;
+  margin-bottom: 20px;
   text-align: center;
-  opacity: 0;
-  animation: fadeIn 1s forwards;
-  animation-delay: 0.3s;
-  padding: 0 16px;
+}
+.search-bus-schedule{
+  font-size: clamp(0.9em, 3vw, 1.1em);
+  opacity: 0.9;
 }
 
 @keyframes fadeIn {
@@ -562,9 +587,10 @@ a {
 .schedule-container {
   max-width: 1100px;
   margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  background: rgba(255, 255, 255, 0.433);
+  border: 1px solid rgba(0, 0, 0, 0.242);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
   max-height: 190vh;
   overflow-y: auto;
   width: 90%;
@@ -572,7 +598,7 @@ a {
 }
 
 .schedule-container-header {
-  background: #4a5de8;
+  background: #0a0a0a;
   color: white;
   padding: 30px;
   margin-bottom: 20px;
@@ -580,7 +606,8 @@ a {
 }
 
 .schedule-container-h1 {
-  font-size: clamp(1.5em, 5vw, 2.5em);
+  font-size: 50px;
+  font-weight: 700;
   margin-bottom: 10px;
 }
 
@@ -591,8 +618,8 @@ a {
 
 .schedule-controls {
   padding: 20px;
-  background: #f8f9ff;
-  border-bottom: 2px solid #4a5de8;
+  background: rgba(255, 255, 255, 0.433);
+  border-bottom: 2px solid #0a0a0a;
   display: flex;
   gap: 15px;
   flex-wrap: wrap;
@@ -616,7 +643,7 @@ a {
 
 .schedule-input-route[type="text"] {
   padding: 10px 15px;
-  border: 2px solid #4a5de8;
+  border: 2px solid #0a0a0a;
   border-radius: 8px;
   font-size: 1em;
   background: white;
@@ -629,8 +656,8 @@ a {
 
 .schedule-input-route[type="text"]:focus {
   outline: none;
-  border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  border-color: #0ca678;
+  box-shadow: 0 0 10px 3px rgba(177, 234, 102, 0.436);
 }
 
 .schedule-searchBtn,
@@ -647,11 +674,11 @@ a {
 }
 
 .schedule-searchBtn {
-  background: #4a5de8;
+  background: #0ca678;
 }
 
 .schedule-searchBtn:hover {
-  background: #667eea;
+  background: #0a0a0a;
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -661,7 +688,7 @@ a {
 }
 
 .schedule-clearBtn:hover {
-  background: #374151;
+  background: rgb(225, 69, 69);
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -674,13 +701,12 @@ a {
 
 .route-section {
   margin-bottom: 30px;
-  border: 2px solid #e0e7ff;
-  border-radius: 10px;
+  border: none;
   overflow: hidden;
 }
 
 .route-header {
-  background: #4a5de8;
+  background: black;
   color: white;
   padding: 15px 20px;
   display: flex;
@@ -703,9 +729,10 @@ a {
   text-align: center;
   padding: 3rem 1.5rem;
   margin-top: 2rem;
-  background-color: #f8f9fa;
-  border: 2px dashed #dee2e6;
-  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.433);
+  border: 1px solid rgba(0, 0, 0, 0.242);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
   color: #6c757d;
   font-size: 1.1rem;
   font-weight: 500;
@@ -715,7 +742,7 @@ a {
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  background: rgba(255, 255, 255, 0.677);
   overflow-x: auto;
   display: block;
 }
@@ -738,7 +765,7 @@ th {
   text-align: left;
   color: black;
   font-weight: 600;
-  border-bottom: 2px solid #4a5de8;
+  border-bottom: 2px solid #0ca678;
 }
 
 td {
@@ -753,7 +780,7 @@ tr:hover {
 
 .route-time {
   font-weight: 600;
-  color: #4a5de8;
+  color: #0ca678;
 }
 
 /* Mobile Responsive */
@@ -805,24 +832,25 @@ tr:hover {
 .lostfound-container {
   max-width: 1000px;
   margin: 120px auto 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.433);
+  border: 1px solid rgba(0, 0, 0, 0.242);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
   overflow: hidden;
 }
 
 /* Header */
 .lostfound-header {
   text-align: center;
-  background: #4a5de8;
+  background: #0a0a0a;
   color: white;
   padding: 30px;
   margin: 0;
 }
 
 .lostfound-title {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 50px;
+  font-weight: 700;
   color: white;
   margin: 0;
 }
@@ -851,7 +879,7 @@ tr:hover {
 }
 
 .lostfound-tab-btn.active {
-  background: #333;
+  background: #0ca678;
   color: white;
 }
 
@@ -870,16 +898,17 @@ tr:hover {
 /* Item Cards */
 .lostfound-card {
   border: 1px solid #ddd;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 30px;
   transition: 0.2s;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background: white ;
 }
 
 .lostfound-card:hover {
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
   transform: translateY(-2px);
 }
 
@@ -941,12 +970,12 @@ tr:hover {
 }
 
 .lostfound-btn-primary {
-  background: #4a5de8;
+  background: #0a0a0a;
   color: white;
 }
 
 .lostfound-btn-primary:hover {
-  background: #3a4dc8;
+  background: #0ca678;
 }
 
 /* New Secondary Button Style */
@@ -985,8 +1014,9 @@ tr:hover {
 
 .lostfound-input:focus,
 .lostfound-textarea:focus {
-  outline: 2px solid #4a5de8;
+  outline: 2px solid #0ca678;
   border-color: transparent;
+  box-shadow: 0 0 20px 3px rgba(154, 255, 66, 0.15);
 }
 
 /* Utility */
@@ -1008,11 +1038,12 @@ tr:hover {
 
 .lostfound-modal-content {
   background-color: #fff;
+  line-height: 2rem;
   padding: 20px;
   border: 1px solid #888;
   width: 80%;
   max-width: 500px;
-  border-radius: 8px;
+  border-radius: 15 px;
   position: fixed;
   top: 50%;
   left: 50%;
@@ -1077,9 +1108,10 @@ tr:hover {
 .realAlerts-container {
   max-width: 1100px;
   margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  background: rgba(255, 255, 255, 0.433);
+  border: 1px solid rgba(0, 0, 0, 0.242);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
   max-height: 190vh;
   overflow-y: auto;
   width: 90%;
@@ -1087,7 +1119,7 @@ tr:hover {
 }
 
 .realAlerts-container-header {
-  background: #4a5de8;
+  background: #0a0a0a;
   color: white;
   padding: 30px;
   margin-bottom: 20px;
@@ -1095,8 +1127,9 @@ tr:hover {
 }
 
 .realAlerts-container-h1 {
-  font-size: 2.5em;
+  font-size: 50px;
   margin-bottom: 10px;
+  font-weight: 700;
 }
 
 .realAlerts-subtitle {
@@ -1113,9 +1146,9 @@ tr:hover {
 
 .alert {
   background: white;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -1173,9 +1206,10 @@ tr:hover {
 .News-container {
   max-width: 1100px;
   margin: 0 auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 10px 26px rgba(2, 6, 23, 0.08);
+  background: rgba(255, 255, 255, 0.433);
+  border: 1px solid rgba(0, 0, 0, 0.242);
+  border-radius: 16px;
+  box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
   max-height: 190vh;
   overflow-y: auto;
   width: 90%;
@@ -1183,7 +1217,7 @@ tr:hover {
 }
 
 .News-container-header {
-  background: linear-gradient(90deg, #3b4ee6 0%, #5a74ff 100%);
+  background: #0a0a0a;
   color: #fff;
   padding: 28px 24px;
   text-align: center;
@@ -1193,7 +1227,7 @@ tr:hover {
 }
 
 .News-container-h1 {
-  font-size: 2rem;
+  font-size: 50px;
   margin: 0 0 6px 0;
   font-weight: 700;
 }
@@ -1214,7 +1248,7 @@ tr:hover {
 /* Individual news item */
 .news-item {
   background: #ffffff;
-  border-radius: 10px;
+  border-radius: 15px;
   padding: 18px;
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
   transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -1225,7 +1259,7 @@ tr:hover {
 
 .news-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.09);
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.09);
 }
 
 .news-header {

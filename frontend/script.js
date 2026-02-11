@@ -28,7 +28,19 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById('NewsContainer')) {
     initNewsSection();
   }
+  // Trigger page open animation
+  initPageAnimation();
 });
+
+/* Page open animation: adds class to `#smooth-content` to animate opacity/translate */
+function initPageAnimation() {
+  const container = document.getElementById('smooth-content');
+  if (!container) return;
+  // Use RAF to ensure styles are computed before adding the class
+  requestAnimationFrame(() => {
+    container.classList.add('animate-in');
+  });
+}
 
 /* <---- GLOBAL FUNCTIONS: Shared across all pages ----> */
 
