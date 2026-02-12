@@ -12,7 +12,7 @@
   min-height: 100vh;
   opacity: 0;
   transform: translateY(12px);
-  transition: opacity 700ms cubic-bezier(.2,.9,.2,1), transform 700ms cubic-bezier(.2,.9,.2,1);
+  transition: opacity 700ms cubic-bezier(.2, .9, .2, 1), transform 700ms cubic-bezier(.2, .9, .2, 1);
   will-change: opacity, transform;
 }
 
@@ -328,7 +328,7 @@ a {
 
 /* <---- liveBus.html Beginning ----> */
 
-/*search bar*/
+/* Search Wrapper */
 .search-wrapper {
   min-height: calc(100vh - var(--navbar-height));
   margin-top: var(--navbar-height);
@@ -344,16 +344,48 @@ a {
   align-items: center;
   gap: 20px;
   width: 100%;
-  max-width: 420px;
+  max-width: 720px;
 }
 
 .search-card {
   background: rgba(255, 255, 255, 0.433);
   width: 100%;
-  padding: 24px;
+  padding: 0;
   border: 1px solid rgba(0, 0, 0, 0.242);
   border-radius: 16px;
   box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08);
+  overflow: hidden;
+  padding-bottom: 24px;
+}
+
+.search-card-header {
+  background: #0a0a0a;
+  color: white;
+  padding: 30px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.findAnyBus {
+  font-size: 50px;
+  margin-bottom: 10px;
+  font-weight: 700;
+  display: block;
+}
+
+.search-bus-subtitle {
+  font-size: 1.1em;
+  opacity: 0.9;
+  margin: 0;
+}
+
+.dual-input,
+.or-text,
+.single-input,
+.proceed-btn {
+  margin-left: 24px;
+  margin-right: 24px;
+  width: calc(100% - 48px);
 }
 
 .dual-input {
@@ -371,7 +403,6 @@ a {
   outline: none;
   background: #FFFFFF;
   color: #0F172A;
-
 }
 
 .search-input::placeholder {
@@ -395,7 +426,6 @@ a {
 
 .single-input {
   margin-bottom: 20px;
-  width: 100%;
   padding: 12px 14px;
   font-size: 16px;
   border-radius: 10px;
@@ -403,6 +433,7 @@ a {
   outline: none;
   background: #FFFFFF;
   color: #0F172A;
+  box-sizing: border-box;
 }
 
 .single-input::placeholder {
@@ -414,7 +445,6 @@ a {
 }
 
 .proceed-btn {
-  width: 100%;
   padding: 12px;
   font-size: 16px;
   border-radius: 12px;
@@ -429,35 +459,25 @@ a {
   background: #0ca678;
 }
 
-.findAnyBus {
-  font-size: 50px;
-  font-weight: 700;
-  margin-bottom: 10px;
-}
-
-.search-card-header {
-  background: #0a0a0a;
-  color: white;
-  padding: 30px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-.search-bus-schedule{
-  font-size: clamp(0.9em, 3vw, 1.1em);
-  opacity: 0.9;
-}
-
 @keyframes fadeIn {
   to {
     opacity: 1;
   }
 }
 
-/* Tablet and up */
 @media (min-width: 640px) {
   .search-card {
-    padding: 32px;
     border-radius: 20px;
+    padding-bottom: 32px;
+  }
+
+  .dual-input,
+  .or-text,
+  .single-input,
+  .proceed-btn {
+    margin-left: 32px;
+    margin-right: 32px;
+    width: calc(100% - 64px);
   }
 
   .dual-input {
@@ -904,7 +924,7 @@ tr:hover {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: white ;
+  background: white;
 }
 
 .lostfound-card:hover {
